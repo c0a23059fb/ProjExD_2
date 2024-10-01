@@ -13,6 +13,17 @@ DELTA = {pg.K_UP:(0, -5),
         pg.K_RIGHT:(5, 0),
         } #練習問題1
 
+def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]: #練習問題3
+    """
+    引数：こうかとん　または　爆弾のRect
+    戻り地：真理値タプル(横判定結果、縦判定結果)
+    """
+    yoko, tate = True, True
+    if obj_rct.left < 0 or WIDTH < obj_rct.right:
+        yoko = False
+    if obj_rct.top < 0 or obj_rct.bottom > HEIGHT:
+        tate = False
+    return yoko, tate
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -52,8 +63,15 @@ def main():
                 sum_mv[1] += tpl[1] #横方向
 
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True): #練習問題3
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip((vx, vy)) #練習問題2
+        yoko, tate = check_bound(bb_rct) #練習問題3
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         screen.blit(bb_img, bb_rct) 
         pg.display.update()
         tmr += 1
