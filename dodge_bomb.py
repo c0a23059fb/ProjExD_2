@@ -1,7 +1,8 @@
 import os
+import pygame as pg
 import random
 import sys
-import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -25,6 +26,27 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]: #練習問題3
         tate = False
     return yoko, tate
 
+def game_over(scr: pg.Surface) -> None:
+    """
+    引数：スクリーンのSurface
+    戻り値：None
+    """
+    # ゲームオーバー画面
+    bo = pg.Surface((WIDTH, HEIGHT)) # ブラックアウト
+    bo.set_alpha(205)
+    pg.draw.rect(bo, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
+    fonto = pg.font.Font(None, 70) # 文字
+    txt = fonto.render("Game Over", True, (255, 255, 255))
+    kk_cry_img = pg.image.load("fig/8.png")
+
+    # 反映
+    scr.blit(bo, [0, 0])
+    scr.blit(txt, [(WIDTH / 2) - 140, (HEIGHT / 2) - 40])
+    scr.blit(kk_cry_img, [(WIDTH / 2) - 205, (HEIGHT / 2) - 50])
+    scr.blit(kk_cry_img, [(WIDTH / 2) + 145, (HEIGHT / 2) - 50])
+    pg.display.update()
+    time.sleep(5)
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -47,7 +69,7 @@ def main():
         screen.blit(bg_img, [0, 0]) 
         if kk_rct.colliderect(bb_rct): #練習問題4
             #こうかとんと爆弾が重なっていたら
-            print("GAME OVER")
+            game_over(screen)
             return 
 
         key_lst = pg.key.get_pressed()
