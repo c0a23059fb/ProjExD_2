@@ -17,7 +17,7 @@ DELTA = {pg.K_UP:(0, -5),
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]: # 練習問題3
     """
-    引数：こうかとん　または　爆弾のRect
+    引数：こうかとん　または　爆弾のRect,
     戻り地：真理値タプル(横判定結果、縦判定結果)
     """
 
