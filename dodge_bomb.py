@@ -47,6 +47,20 @@ def game_over(scr: pg.Surface) -> None:
     pg.display.update()
     time.sleep(5)
 
+def bb_chenger() -> tuple[list, list]:
+    """
+    引数：None
+    戻り値：listのtuple
+    """
+    accs = [a for a in range(1, 11)] #爆弾の加速度
+    img = []
+    for r in range(1, 11):
+        bb_img = pg.Surface((20 * r, 20 * r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10 * r, 10 * r), 10 * r)
+        img.append(bb_img)
+    return (accs, img)
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -60,6 +74,7 @@ def main():
     bb_rct = bb_img.get_rect()
     bb_rct.center = (random.randint(0, WIDTH), random.randint(0, HEIGHT))
     vx, vy = 5, -5 #爆弾の移動
+    bb_accs, bb_imgs = bb_chenger()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -92,7 +107,11 @@ def main():
         if check_bound(kk_rct) != (True, True): #練習問題3
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip((vx, vy)) #練習問題2
+        bb_img = bb_imgs[min(tmr // 500, 9)]
+        bb_img.set_colorkey((0, 0, 0))
+        avx = vx * bb_accs[min(tmr // 500, 9)] # 演習課題2
+        avy = vy * bb_accs[min(tmr // 500, 9)]
+        bb_rct.move_ip((avx, avy)) #練習問題2
         yoko, tate = check_bound(bb_rct) #練習問題3
         if not yoko:
             vx *= -1
